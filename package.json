@@ -1,0 +1,22 @@
+{
+  "name": "pidgeon",
+  "version": "1.0.0",
+  "description": "Electric vehicle incentive notifier",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "keywords": [
+    "Tesla",
+    "incentives",
+    "twilio",
+    "transportation"
+  ],
+  "author": "Jordan Culver",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dot-env": "0.0.1",
+    "node-cron": "^3.0.0"
+  }
+}
