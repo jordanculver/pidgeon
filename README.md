@@ -1,4 +1,4 @@
-# Pidgeon
+# Pigeon
 A Node.js cron job application that texts a number with Twilio whenever state or federal incentives become available.
 
 ### How to run?
