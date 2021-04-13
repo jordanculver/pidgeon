@@ -12,6 +12,20 @@ A Node.js cron job application that texts a number with Twilio whenever state or
 - Customize whether to search recent or past incentives:
     * NREL_FIND_RECENT=true
 
+- Customize which kinds of incentives are searched for (comma separated, no spaces):
+    * NREL_INCENTIVE_TYPES=GNT,TAX,LOANS,RBATE,EXEM,OTHER
+
+    [Available incentive types:](https://developer.nrel.gov/docs/transportation/transportation-incentives-laws-v1/)
+    | Code  | Meaning          |
+    |-------|------------------|
+    | GNT   | Grants           |
+    | TAX   | Tax Incentives   |
+    | LOANS | Loans and Leases |
+    | RBATE | Rebates          |
+    | EXEM  | Exemptions       |
+    | OTHER | Other            |
+    
+---
 - Fill out the Twilio account SID, auth token, and your messaging service SID environment variables
     * TWILIO_TO_PHONE_NUMBER=
     * TWILIO_ACCOUNT_SID=
