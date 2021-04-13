@@ -3,9 +3,11 @@ A Node.js cron job application that texts a number with Twilio whenever state or
 
 ### How to run?
 
-- Register for your API key from the national laboratory of the U.S. Department of Energy [here](https://developer.nrel.gov/signup/) & set environment variable: NREL_API_KEY
+- Register for your API key from The National Renewable Energy Laboratory [here](https://developer.nrel.gov/signup/) & set environment variable:
+    * NREL_API_KEY
 
-- Customize the states/jurisdictions you're interested in comma separated: NREL_JURISDICTION=US,CA,TX
+- Customize the states/jurisdictions you're interested in (comma separated, no spaces): 
+    * NREL_JURISDICTION=US,CA,TX
 
 - Fill out the Twilio account SID, auth token, and your messaging service SID environment variables
     * TWILIO_TO_PHONE_NUMBER=
@@ -20,6 +22,9 @@ A Node.js cron job application that texts a number with Twilio whenever state or
     * CRON_DAY_OF_MONTH=*
     * CRON_MONTH=*
     * CRON_DAY_OF_WEEK=*
+
+- Customize whether the texts use state codes or the actual state names:
+    * TEXT_STATE_CODES=true
 
 - Run the application
     ```sh
