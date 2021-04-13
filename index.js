@@ -29,7 +29,7 @@ cron.schedule(cronConfig, () => {
             incentive_type: 'GNT,TAX,LOANS,RBATE,EXEM',
             user_type: 'IND',
             poc: 'true',
-            recent: 'false'
+            recent: `${process.env.NREL_FIND_RECENT === 'true'}`
         }
     }).then(function (response) {
         if (response.data.result.length === 0) return console.log('No incentives found');

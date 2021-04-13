@@ -9,6 +9,9 @@ A Node.js cron job application that texts a number with Twilio whenever state or
 - Customize the states/jurisdictions you're interested in (comma separated, no spaces): 
     * NREL_JURISDICTION=US,CA,TX
 
+- Customize whether to search recent or past incentives:
+    * NREL_FIND_RECENT=true
+
 - Fill out the Twilio account SID, auth token, and your messaging service SID environment variables
     * TWILIO_TO_PHONE_NUMBER=
     * TWILIO_ACCOUNT_SID=
