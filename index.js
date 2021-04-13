@@ -1,7 +1,7 @@
 const axios = require("axios").default;
 require('dotenv').config();
 const client = require('twilio')(
-    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_ACCOUNT_S_ID,
     process.env.TWILIO_ACCOUNT_AUTH_TOKEN
 );
 const cron = require('node-cron');
@@ -26,16 +26,29 @@ cron.schedule(cronConfig, () => {
             incentive_type: 'GNT,TAX,LOANS,RBATE,EXEM',
             user_type: 'IND',
             poc: 'true',
-            recent: 'true'
+            recent: 'false'
         }
     }).then(function (response) {
-        if (response.data.result.length === 0) return;
-        const firstResult = response.data.result[0];
+        if (response.data.result.length === 0) return console.log('No incentives found');
+        console.log('Incentive(s) found!');
+        const states = response.data.result
+            .map(result => result.state)
+            .reduce((accumulator, current) => {
+                if (accumulator.indexOf(current) === -1) {
+                    accumulator.push(current);
+                }
+                return accumulator;
+            }, []);
+        const incentives = `incentive${states.length > 1 ? 's' : ''}`;
+        const lastState = states[states.length - 1];
+        const prettyStates = states
+            .join(', ')
+            .replace(`, ${lastState}`, `, and ${lastState}`);
         client.messages
             .create({
                 to: process.env.TWILIO_TO_PHONE_NUMBER,
                 messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
-                body: `Incentive found for ${firstResult.state}: ${firstResult.plaintext}`
+                body: `${states.length} ${incentives} found for ${prettyStates}`
             })
             .then(message => console.log(message.sid))
             .done();
