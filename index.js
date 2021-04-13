@@ -27,7 +27,7 @@ cron.schedule(cronConfig, () => {
             limit: '50',
             jurisdiction: process.env.NREL_JURISDICTION,
             incentive_type: process.env.NREL_INCENTIVE_TYPES,
-            user_type: 'IND',
+            user_type: process.env.NREL_USER_TYPES,
             poc: 'true',
             recent: `${process.env.NREL_FIND_RECENT === 'true'}`
         }

@@ -24,7 +24,21 @@ A Node.js cron job application that texts a number with Twilio whenever state or
     | RBATE | Rebates          |
     | EXEM  | Exemptions       |
     | OTHER | Other            |
-    
+
+---
+- Customize which incentives apply to which kinds of users:
+    * NREL_USER_TYPES=FLEET,GOV,IND,STATION,AFP,PURCH,MAN,OTHER
+
+    | Code    | Meaning                                           |
+    |---------|---------------------------------------------------|
+    | FLEET   | Private Business                                  |
+    | GOV     | Government Entity                                 |
+    | IND     | Personal Vehicle Owner or Driver                  |
+    | STATION | Alternative Fuel Infrastructure Operator          |
+    | AFP     | Alternative Fuel Producer                         |
+    | PURCH   | Alternative Fuel Purchaser                        |
+    | MAN     | Alternative Fuel Vehicle Manufacturer/Retrofitter |
+    | OTHER   | Other                                             |
 ---
 - Fill out the Twilio account SID, auth token, and your messaging service SID environment variables
     * TWILIO_TO_PHONE_NUMBER=
