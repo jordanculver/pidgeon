@@ -1,5 +1,6 @@
 const axios = require("axios").default;
 require('dotenv').config();
+const fs = require('fs');
 const client = require('twilio')(
     process.env.TWILIO_ACCOUNT_S_ID,
     process.env.TWILIO_ACCOUNT_AUTH_TOKEN
@@ -13,6 +14,8 @@ const cronConfig = [
     process.env.CRON_MONTH,
     process.env.CRON_DAY_OF_WEEK
 ].join(' ');
+
+const STATE_CODES = JSON.parse(fs.readFileSync('states.json', { encoding: 'utf-8'}));
 
 cron.schedule(cronConfig, () => {
     console.log('Searching for incentives');
@@ -33,12 +36,13 @@ cron.schedule(cronConfig, () => {
         console.log('Incentive(s) found!');
         const states = response.data.result
             .map(result => result.state)
-            .reduce((accumulator, current) => {
-                if (accumulator.indexOf(current) === -1) {
-                    accumulator.push(current);
+            .reduce((uniqueStates, stateCode) => {
+                if (uniqueStates.indexOf(stateCode) === -1) {
+                    uniqueStates.push(stateCode);
                 }
-                return accumulator;
-            }, []);
+                return uniqueStates;
+            }, [])
+            .map(stateCode => STATE_CODES[stateCode]);
         const incentives = `incentive${states.length > 1 ? 's' : ''}`;
         const lastState = states[states.length - 1];
         const prettyStates = states
