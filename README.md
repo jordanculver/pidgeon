@@ -40,6 +40,10 @@ A Node.js cron job application that texts a number with Twilio whenever state or
     | MAN     | Alternative Fuel Vehicle Manufacturer/Retrofitter |
     | OTHER   | Other                                             |
 ---
+
+- Customize how many results can be returned (defaults to 10 when not setting):
+    * NREL_RESULT_LIMIT=10
+
 - Fill out the Twilio account SID, auth token, and your messaging service SID environment variables
     * TWILIO_TO_PHONE_NUMBER=
     * TWILIO_ACCOUNT_SID=

@@ -24,7 +24,7 @@ cron.schedule(cronConfig, () => {
         url: 'https://developer.nrel.gov/api/transportation-incentives-laws/v1.json',
         params: {
             api_key: process.env.NREL_API_KEY,
-            limit: '50',
+            limit: process.env.NREL_RESULT_LIMIT,
             jurisdiction: process.env.NREL_JURISDICTION,
             incentive_type: process.env.NREL_INCENTIVE_TYPES,
             user_type: process.env.NREL_USER_TYPES,
@@ -48,6 +48,7 @@ cron.schedule(cronConfig, () => {
         const prettyStates = states
             .join(', ')
             .replace(`, ${lastState}`, `, and ${lastState}`);
+        console.log(`${states.length} ${incentives} found for ${prettyStates}`);
         client.messages
             .create({
                 to: process.env.TWILIO_TO_PHONE_NUMBER,
