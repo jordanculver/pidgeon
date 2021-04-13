@@ -15,7 +15,7 @@ const cronConfig = [
     process.env.CRON_DAY_OF_WEEK
 ].join(' ');
 
-const STATE_CODES = JSON.parse(fs.readFileSync('states.json', { encoding: 'utf-8'}));
+const STATE_CODES = JSON.parse(fs.readFileSync('states.json', { encoding: 'utf-8' }));
 
 cron.schedule(cronConfig, () => {
     console.log('Searching for incentives');
@@ -42,7 +42,7 @@ cron.schedule(cronConfig, () => {
                 }
                 return uniqueStates;
             }, [])
-            .map(stateCode => STATE_CODES[stateCode]);
+            .map(stateCode => process.env.TEXT_STATE_CODES === 'true' ? stateCode : STATE_CODES[stateCode]);
         const incentives = `incentive${states.length > 1 ? 's' : ''}`;
         const lastState = states[states.length - 1];
         const prettyStates = states
