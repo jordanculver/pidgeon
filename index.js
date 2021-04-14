@@ -44,11 +44,7 @@ cron.schedule(cronConfig, () => {
             }, [])
             .map(stateCode => process.env.TEXT_STATE_CODES === 'true' ? stateCode : STATE_CODES[stateCode]);
         const incentives = `incentive${states.length > 1 ? 's' : ''}`;
-        const lastState = states[states.length - 1];
-        const prettyStates = states
-            .join(', ')
-            .replace(`, ${lastState}`, `, and ${lastState}`);
-        console.log(`${states.length} ${incentives} found for ${prettyStates}`);
+        const prettyStates = prettifyStates(states);
         client.messages
             .create({
                 to: process.env.TWILIO_TO_PHONE_NUMBER,
@@ -61,3 +57,13 @@ cron.schedule(cronConfig, () => {
         console.error(error);
     });
 });
+
+function prettifyStates(states) {
+    if (states.length === 2) {
+        return states.join(' and ')
+    }
+    const lastState = states[states.length - 1];
+    return states
+        .join(', ')
+        .replace(`, ${lastState}`, `, and ${lastState}`);
+}
