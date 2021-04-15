@@ -28,8 +28,18 @@ app.get('/users/:id', (req, res) => {
     res.sendStatus(user !== null ? 200 : 400);
 });
 
+app.delete('/users/:id', (req, res) => {
+    try {
+        fs.rmSync(`data/users/${req.params.id}.json`, { encoding: 'utf-8' });
+    } catch (err) {
+        res.sendStatus(400);
+        console.error(err);
+    }
+    res.sendStatus(200);
+});
+
 let server = app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`pigeon listening at http://localhost:${port}`);
 });
 
 module.exports = server;

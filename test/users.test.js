@@ -42,4 +42,24 @@ describe('Users', () => {
                 .expect(200);
         });
     });
+    describe('DELETE /users/:id', () => {
+        it('returns 400 bad request when user not found', async () => {
+            await request(app)
+                .delete('/users/589b1964-9e17-11eb-a8b3-0242ac130003')
+                .expect(400);
+        });
+        it('removes user in database', async () => {
+            const user = await request(app)
+                .post('/users');
+            await request(app)
+                .get(`/users/${user.body.id}`)
+                .expect(200);
+            await request(app)
+                .delete(`/users/${user.body.id}`)
+                .expect(200);
+            await request(app)
+                .get(`/users/${user.body.id}`)
+                .expect(400);
+        });
+    });
 });
