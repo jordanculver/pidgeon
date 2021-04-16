@@ -9,11 +9,14 @@ describe('Users', () => {
             if (files) files.forEach(file => fs.rmSync(`data/users/${file}`));
         });
     };
-    beforeEach(() => {
-        deleteUsers();
-    });
+    const deleteJobs = () => {
+        fs.readdir('data/jobs', (err, files) => {
+            if (files) files.forEach(file => fs.rmSync(`data/jobs/${file}`));
+        });
+    };
     afterEach(() => {
         deleteUsers();
+        deleteJobs();
     });
     describe('POST /users', () => {
         it('returns new UUID', async () => {
@@ -40,6 +43,17 @@ describe('Users', () => {
             await request(app)
                 .get(`/users/${res.body.id}`)
                 .expect(200);
+        });
+        it('returns jobs associated with user', async () => {
+            const res = await request(app)
+                .post('/users');
+            const job = await request(app)
+                .post(`/users/${res.body.id}/jobs`);
+            const user = await request(app)
+                .get(`/users/${res.body.id}`)
+                .expect(200);
+            expect(user.body.jobs.length).to.equal(1);
+            expect(job.body.userId).to.equal(user.body.id);
         });
     });
     describe('DELETE /users/:id', () => {

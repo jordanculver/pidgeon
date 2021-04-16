@@ -2,6 +2,7 @@ const router = require('express').Router();
 const jobs = require('./jobs');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const { unsubscribe } = require('./jobs');
 
 const getUser = (userId) => {
     let user = null;
@@ -32,10 +33,17 @@ router.get('/:id', (req, res) => {
     let user = null;
     try {
         user = fs.readFileSync(`data/users/${req.params.id}.json`, { encoding: 'utf-8' });
+        fs.readdir('data/jobs', (err, files) => {
+            if (!files) return;
+            const jobs = files
+                .map(file => JSON.parse(fs.readFileSync(`data/jobs/${file}`, { encoding: 'utf-8' })))
+                .filter(job => job.userId === req.params.id);
+            res.status(200).json({ id: req.params.id, jobs });
+        });
     } catch (err) {
+        res.sendStatus(400);
         console.error(err);
     }
-    res.sendStatus(user !== null ? 200 : 400);
 });
 
 router.delete('/:id', (req, res) => {
