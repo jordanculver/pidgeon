@@ -1,6 +1,22 @@
 const router = require('express').Router();
+const jobs = require('./jobs');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+
+const getUser = (userId) => {
+    let user = null;
+    try {
+        return fs.readFileSync(`data/users/${userId}.json`, { encoding: 'utf-8' });
+    } catch (err) {
+        console.error(err);
+    }
+    return user;
+};
+
+router.use('/:userId/jobs', (req, res, next) => {
+    req.body.user = getUser(req.params.userId);
+    next();
+}, jobs);
 
 router.post('/', (req, res) => {
     const user = { id: uuidv4() };
@@ -32,4 +48,4 @@ router.delete('/:id', (req, res) => {
     res.sendStatus(200);
 });
 
-module.exports = router
+module.exports = router;
