@@ -1,6 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const { request } = require('express');
 
 const getJob = (jobId) => {
     let job = null;
@@ -36,6 +37,17 @@ router.get('/:id', (req, res) => {
     const job = getJob(req.params.id);
     if (job === null) return res.status(400).send({ error: 'Job not found' });
     res.status(200).send(JSON.parse(job));
+});
+
+router.get('/', (req, res) => {
+    if (req.body.user === null) return res.status(400).send({ error: 'User not found' });
+    fs.readdir('data/jobs', (err, files) => {
+        if (!files) return;
+        const jobs = files
+            .map(file => JSON.parse(fs.readFileSync(`data/jobs/${file}`, { encoding: 'utf-8' })))
+            .filter(job => job.userId === req.params.userId);
+        res.status(200).json(jobs);
+    });
 });
 
 module.exports = router;

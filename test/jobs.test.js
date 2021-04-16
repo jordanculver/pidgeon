@@ -17,7 +17,7 @@ describe('Jobs', () => {
         await request(app).delete(`/users/${user.id}`);
         deleteJobs();
     });
-    describe('POST /users/:id/jobs', async () => {
+    describe('POST /users/:userId/jobs', async () => {
         it('returns 400 when user not found', async () => {
             await request(app)
                 .post('/users/1/jobs')
@@ -159,6 +159,43 @@ describe('Jobs', () => {
             expect(job.body.hour).to.equal('12');
             expect(job.body.dayOfMonth).to.equal('*');
             expect(job.body.dayOfWeek).to.equal('*');
+        });
+    });
+    describe('GET /users/:userId/jobs', async () => {
+        let createdJobs;
+        beforeEach(async () => {
+            const job1 = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    second: '30'
+                });
+            const job2 = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    minute: '32'
+                });
+            createdJobs = Array.of(job1.body, job2.body);
+        });
+        it('returns list of jobs associated with user', async () => {
+            const jobs = await request(app)
+                .get(`/users/${user.id}/jobs`)
+                .expect(200);
+            expect(jobs.body.length).to.equal(2);
+            const jobIds = jobs.body.map(job => job.id);
+            expect(jobIds).to.contain(createdJobs[0].id);
+            expect(jobIds).to.contain(createdJobs[1].id);
+        });
+        it('returns 400 bad request when user not found', async () => {
+            await request(app)
+                .get(`/users/1/jobs`)
+                .expect(400, { error: 'User not found' });
+        });
+        it('returns empty list of jobs when user has no jobs', async () => {
+            const newUser = await request(app).post('/users');
+            const jobs = await request(app)
+                .get(`/users/${newUser.body.id}/jobs`)
+                .expect(200);
+            expect(jobs.body.length).to.equal(0);
         });
     });
 });
