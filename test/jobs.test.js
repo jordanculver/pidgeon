@@ -198,4 +198,31 @@ describe('Jobs', () => {
             expect(jobs.body.length).to.equal(0);
         });
     });
+    describe('DELETE /users/:userId/jobs/:id', async () => {
+        let job;
+        beforeEach(async () => {
+            job = (await request(app).post(`/users/${user.id}/jobs`)).body;
+        });
+        it('returns 400 bad request when user not found', async () => {
+            await request(app)
+                .delete(`/users/1/jobs/${job.id}`)
+                .expect(400, { error: 'User not found' });
+        });
+        it('returns 400 bad request when job not found', async () => {
+            await request(app)
+                .delete(`/users/${user.id}/jobs/1`)
+                .expect(400, { error: 'Job not found' });
+        });
+        it('removes job from database', async () => {
+            await request(app)
+                .get(`/users/${user.id}/jobs/${job.id}`)
+                .expect(200);
+            await request(app)
+                .delete(`/users/${user.id}/jobs/${job.id}`)
+                .expect(204);
+            await request(app)
+                .get(`/users/${user.id}/jobs/${job.id}`)
+                .expect(400, { error: 'Job not found' });
+        });
+    });
 });

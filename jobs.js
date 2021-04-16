@@ -50,4 +50,16 @@ router.get('/', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+    if (req.body.user === null) return res.status(400).send({ error: 'User not found' });
+    const job = getJob(req.params.id);
+    if (job === null) return res.status(400).send({ error: 'Job not found' });
+    try {
+        fs.rmSync(`data/jobs/${req.params.id}.json`, { encoding: 'utf-8' });
+    } catch (err) {
+        console.error(err);
+    }
+    res.sendStatus(204);
+});
+
 module.exports = router;
