@@ -62,4 +62,17 @@ router.delete('/:id', (req, res) => {
     res.sendStatus(204);
 });
 
+router.delete('/', (req, res) => {
+    if (req.body.user === null) return res.status(400).send({ error: 'User not found' });
+    fs.readdir('data/jobs', (err, files) => {
+        if (!files) return;
+        const userJobs = files
+            .map(file => JSON.parse(fs.readFileSync(`data/jobs/${file}`, { encoding: 'utf-8' })))
+            .filter(job => job.userId === req.params.userId);
+        if (userJobs.length === 0) return res.sendStatus(200);
+        userJobs.forEach(job => fs.rmSync(`data/jobs/${job.id}.json`, { encoding: 'utf-8' }));
+        res.sendStatus(204);
+    });
+});
+
 module.exports = router;

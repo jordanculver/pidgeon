@@ -225,4 +225,44 @@ describe('Jobs', () => {
                 .expect(400, { error: 'Job not found' });
         });
     });
+    describe('DELETE /users/:userId/jobs', async () => {
+        let createdJobs;
+        beforeEach(async () => {
+            const job1 = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    second: '30'
+                });
+            const job2 = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    minute: '32'
+                });
+            createdJobs = Array.of(job1.body, job2.body);
+        });
+        it('returns 400 bad request when user not found', async () => {
+            await request(app)
+                .delete(`/users/1/jobs`)
+                .expect(400, { error: 'User not found' });
+        });
+        it('returns 200 when jobs not found', async () => {
+            const newUser = await request(app).post('/users');
+            await request(app)
+                .delete(`/users/${newUser.body.id}/jobs`)
+                .expect(200);
+        });
+        it('removes all jobs associated with user from database', async () => {
+            const jobs = await request(app)
+                .get(`/users/${user.id}/jobs`)
+                .expect(200);
+            expect(jobs.body.length).to.equal(2);
+            await request(app)
+                .delete(`/users/${user.id}/jobs`)
+                .expect(204);
+            const emptyJobs = await request(app)
+                .get(`/users/${user.id}/jobs`)
+                .expect(200);
+            expect(emptyJobs.body.length).to.equal(0);
+        });
+    });
 });
