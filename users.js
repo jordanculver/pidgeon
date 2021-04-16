@@ -6,7 +6,7 @@ const fs = require('fs');
 const getUser = (userId) => {
     let user = null;
     try {
-        return fs.readFileSync(`data/users/${userId}.json`, { encoding: 'utf-8' });
+        user = fs.readFileSync(`data/users/${userId}.json`, { encoding: 'utf-8' });
     } catch (err) {
         console.error(err);
     }

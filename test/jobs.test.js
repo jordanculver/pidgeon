@@ -5,11 +5,17 @@ const fs = require('fs');
 
 describe('Jobs', () => {
     let user;
+    const deleteJobs = () => {
+        fs.readdir('data/jobs', (err, files) => {
+            if (files) files.forEach(file => fs.rmSync(`data/jobs/${file}`));
+        });
+    };
     beforeEach(async () => {
         user = (await request(app).post('/users')).body;
     });
     afterEach(async () => {
         await request(app).delete(`/users/${user.id}`);
+        deleteJobs();
     });
     describe('POST /users/:id/jobs', async () => {
         it('returns 400 when user not found', async () => {
@@ -111,6 +117,48 @@ describe('Jobs', () => {
             expect(job.body.hour).to.equal('12');
             expect(job.body.dayOfMonth).to.equal('*');
             expect(job.body.dayOfWeek).to.equal('3');
+        });
+    });
+    describe('GET /users/:userId/jobs/:id', async () => {
+        it('returns 400 when user not found', async () => {
+            await request(app)
+                .get(`/users/2/jobs/1`)
+                .expect(400, { error: 'User not found' });
+        });
+        it('returns 400 when job not found', async () => {
+            await request(app)
+                .get(`/users/${user.id}/jobs/1`)
+                .expect(400, { error: 'Job not found' });
+        });
+        it('returns 200 with cron job configuration', async () => {
+            const created = await request(app)
+                .post(`/users/${user.id}/jobs/`)
+                .expect(201);
+            const job = await request(app)
+                .get(`/users/${user.id}/jobs/${created.body.id}`)
+                .expect(200);
+            expect(job.body.userId).to.equal(user.id);
+            expect(job.body.second).to.equal('*');
+            expect(job.body.minute).to.equal('*');
+            expect(job.body.hour).to.equal('12');
+            expect(job.body.dayOfMonth).to.equal('*');
+            expect(job.body.dayOfWeek).to.equal('*');
+        });
+        it('returns config with desired second', async () => {
+            const created = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    second: '30'
+                })
+                .expect(201);
+            const job = await request(app)
+                .get(`/users/${user.id}/jobs/${created.body.id}`)
+                .expect(200);
+            expect(job.body.second).to.equal('30');
+            expect(job.body.minute).to.equal('*');
+            expect(job.body.hour).to.equal('12');
+            expect(job.body.dayOfMonth).to.equal('*');
+            expect(job.body.dayOfWeek).to.equal('*');
         });
     });
 });
