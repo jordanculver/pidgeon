@@ -17,6 +17,8 @@ router.post('/', (req, res) => {
     if (user === null) return res.status(400).send({ error: 'No user found' });
     res.status(201)
         .send({
+            id: uuidv4(),
+            userId: req.body.userId,
             second: req.body.second ? req.body.second : '*',
             minute: req.body.minute ? req.body.minute : '*',
             hour: req.body.hour ? req.body.hour : '12',
