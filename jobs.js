@@ -13,6 +13,14 @@ const getJob = (jobId) => {
     return job;
 };
 
+const getQuery = (req) => {
+    const defaultQuery = {
+        states: ['US']
+    };
+    if (!req.body.query) return defaultQuery;
+    if (!req.body.query.states) return defaultQuery;
+    return req.body.query;
+};
 router.post('/', (req, res) => {
     if (req.body.user === null) return res.status(400).send({ error: 'No user found' });
     const job = {
@@ -24,7 +32,8 @@ router.post('/', (req, res) => {
             hour: req.body.hour ? req.body.hour : '12',
             dayOfMonth: req.body.dayOfMonth ? req.body.dayOfMonth : '*',
             dayOfWeek: req.body.dayOfWeek ? req.body.dayOfWeek : '*'
-        }
+        },
+        query: getQuery(req)
     };
     try {
         fs.writeFileSync(`data/jobs/${job.id}.json`, JSON.stringify(job));

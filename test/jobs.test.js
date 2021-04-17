@@ -52,6 +52,7 @@ describe('Jobs', () => {
             expect(job.body.schedule.hour).to.equal('12');
             expect(job.body.schedule.dayOfMonth).to.equal('*');
             expect(job.body.schedule.dayOfWeek).to.equal('*');
+            expect(job.body.query.states).to.contain('US');
         });
         it('returns config with desired second', async () => {
             const job = await request(app)
@@ -117,6 +118,18 @@ describe('Jobs', () => {
             expect(job.body.schedule.hour).to.equal('12');
             expect(job.body.schedule.dayOfMonth).to.equal('*');
             expect(job.body.schedule.dayOfWeek).to.equal('3');
+        });
+        it('returns config with desired states to search for', async () => {
+            const job = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    query: {
+                        states: ['CA']
+                    }
+                })
+                .expect(201);
+            expect(job.body.query.states.length).to.equal(1);
+            expect(job.body.query.states).to.contain('CA');
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {
