@@ -18,11 +18,13 @@ router.post('/', (req, res) => {
     const job = {
         id: uuidv4(),
         userId: req.params.userId,
-        second: req.body.second ? req.body.second : '*',
-        minute: req.body.minute ? req.body.minute : '*',
-        hour: req.body.hour ? req.body.hour : '12',
-        dayOfMonth: req.body.dayOfMonth ? req.body.dayOfMonth : '*',
-        dayOfWeek: req.body.dayOfWeek ? req.body.dayOfWeek : '*'
+        schedule: {
+            second: req.body.second ? req.body.second : '*',
+            minute: req.body.minute ? req.body.minute : '*',
+            hour: req.body.hour ? req.body.hour : '12',
+            dayOfMonth: req.body.dayOfMonth ? req.body.dayOfMonth : '*',
+            dayOfWeek: req.body.dayOfWeek ? req.body.dayOfWeek : '*'
+        }
     };
     try {
         fs.writeFileSync(`data/jobs/${job.id}.json`, JSON.stringify(job));

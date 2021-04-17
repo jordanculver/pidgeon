@@ -47,11 +47,11 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .expect(201);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired second', async () => {
             const job = await request(app)
@@ -60,11 +60,11 @@ describe('Jobs', () => {
                     second: '30'
                 })
                 .expect(201);
-            expect(job.body.second).to.equal('30');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('30');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired minute', async () => {
             const job = await request(app)
@@ -73,11 +73,11 @@ describe('Jobs', () => {
                     minute: '34'
                 })
                 .expect(201);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('34');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('34');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired hour', async () => {
             const job = await request(app)
@@ -86,11 +86,11 @@ describe('Jobs', () => {
                     hour: '8'
                 })
                 .expect(201);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('8');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('8');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired day of month', async () => {
             const job = await request(app)
@@ -99,11 +99,11 @@ describe('Jobs', () => {
                     dayOfMonth: '20'
                 })
                 .expect(201);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('20');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('20');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired day of week', async () => {
             const job = await request(app)
@@ -112,11 +112,11 @@ describe('Jobs', () => {
                     dayOfWeek: '3'
                 })
                 .expect(201);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('3');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('3');
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {
@@ -138,11 +138,11 @@ describe('Jobs', () => {
                 .get(`/users/${user.id}/jobs/${created.body.id}`)
                 .expect(200);
             expect(job.body.userId).to.equal(user.id);
-            expect(job.body.second).to.equal('*');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('*');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
         it('returns config with desired second', async () => {
             const created = await request(app)
@@ -154,11 +154,11 @@ describe('Jobs', () => {
             const job = await request(app)
                 .get(`/users/${user.id}/jobs/${created.body.id}`)
                 .expect(200);
-            expect(job.body.second).to.equal('30');
-            expect(job.body.minute).to.equal('*');
-            expect(job.body.hour).to.equal('12');
-            expect(job.body.dayOfMonth).to.equal('*');
-            expect(job.body.dayOfWeek).to.equal('*');
+            expect(job.body.schedule.second).to.equal('30');
+            expect(job.body.schedule.minute).to.equal('*');
+            expect(job.body.schedule.hour).to.equal('12');
+            expect(job.body.schedule.dayOfMonth).to.equal('*');
+            expect(job.body.schedule.dayOfWeek).to.equal('*');
         });
     });
     describe('GET /users/:userId/jobs', async () => {
