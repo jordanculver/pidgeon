@@ -2,7 +2,6 @@ const router = require('express').Router();
 const jobs = require('./jobs');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
-const { unsubscribe } = require('./jobs');
 
 const getUser = (userId) => {
     let user = null;
@@ -53,7 +52,7 @@ router.delete('/:id', (req, res) => {
         res.sendStatus(400);
         console.error(err);
     }
-    res.sendStatus(200);
+    res.sendStatus(204);
 });
 
 module.exports = router;

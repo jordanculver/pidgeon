@@ -70,7 +70,7 @@ describe('Users', () => {
                 .expect(200);
             await request(app)
                 .delete(`/users/${user.body.id}`)
-                .expect(200);
+                .expect(204);
             await request(app)
                 .get(`/users/${user.body.id}`)
                 .expect(400);
