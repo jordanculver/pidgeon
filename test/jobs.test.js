@@ -27,25 +27,30 @@ describe('Jobs', () => {
         it('returns id', async () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } })
                 .expect(201);
             expect(job.body.id).to.match(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/);
         });
         it('returns user id', async () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } })
                 .expect(201);
             expect(job.body.userId).to.equal(user.id);
         });
         it('returns different ids for same user', async () => {
             const res1 = await request(app)
-                .post(`/users/${user.id}/jobs`);
+                .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } });
             const res2 = await request(app)
-                .post(`/users/${user.id}/jobs`);
+                .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } });
             expect(res1.body.id).to.not.equal(res2.body.id);
         });
         it('returns 201 with default cron job configuration when job created', async () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('*');
             expect(job.body.schedule.minute).to.equal('*');
@@ -62,7 +67,8 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    second: '30'
+                    second: '30',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('30');
@@ -75,7 +81,8 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    minute: '34'
+                    minute: '34',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('*');
@@ -88,7 +95,8 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    hour: '8'
+                    hour: '8',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('*');
@@ -101,7 +109,8 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    dayOfMonth: '20'
+                    dayOfMonth: '20',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('*');
@@ -114,7 +123,8 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    dayOfWeek: '3'
+                    dayOfWeek: '3',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             expect(job.body.schedule.second).to.equal('*');
@@ -127,6 +137,7 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
+                    notifications: { phoneNumber: '5551235678' },
                     query: {
                         states: ['CA']
                     }
@@ -139,6 +150,7 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
+                    notifications: { phoneNumber: '5551235678' },
                     query: {
                         incentives: ['GNT', 'LOANS']
                     }
@@ -152,6 +164,7 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
+                    notifications: { phoneNumber: '5551235678' },
                     query: {
                         users: ['GOV', 'STATION']
                     }
@@ -165,6 +178,7 @@ describe('Jobs', () => {
             const job = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
+                    notifications: { phoneNumber: '5551235678' },
                     query: {
                         includeRecentResults: false
                     }
@@ -177,11 +191,17 @@ describe('Jobs', () => {
                 .post(`/users/${user.id}/jobs`)
                 .send({
                     notifications: {
+                        phoneNumber: '5551235678',
                         useStateCodes: true
                     }
                 })
                 .expect(201);
             expect(job.body.notifications.useStateCodes).to.equal(true);
+        });
+        it('returns 400 bad request when phone number to text missing', async () => {
+            await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .expect(400, { error: 'Missing phone number' });
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {
@@ -198,6 +218,7 @@ describe('Jobs', () => {
         it('returns 200 with cron job configuration', async () => {
             const created = await request(app)
                 .post(`/users/${user.id}/jobs/`)
+                .send({ notifications: { phoneNumber: '5551235678' } })
                 .expect(201);
             const job = await request(app)
                 .get(`/users/${user.id}/jobs/${created.body.id}`)
@@ -213,7 +234,8 @@ describe('Jobs', () => {
             const created = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    second: '30'
+                    second: '30',
+                    notifications: { phoneNumber: '5551235678' }
                 })
                 .expect(201);
             const job = await request(app)
@@ -232,12 +254,14 @@ describe('Jobs', () => {
             const job1 = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    second: '30'
+                    second: '30',
+                    notifications: { phoneNumber: '5551235678' }
                 });
             const job2 = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    minute: '32'
+                    minute: '32',
+                    notifications: { phoneNumber: '5551235678' }
                 });
             createdJobs = Array.of(job1.body, job2.body);
         });
@@ -266,7 +290,10 @@ describe('Jobs', () => {
     describe('DELETE /users/:userId/jobs/:id', async () => {
         let job;
         beforeEach(async () => {
-            job = (await request(app).post(`/users/${user.id}/jobs`)).body;
+            job = (await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } })
+            ).body;
         });
         it('returns 400 bad request when user not found', async () => {
             await request(app)
@@ -296,12 +323,14 @@ describe('Jobs', () => {
             const job1 = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    second: '30'
+                    second: '30',
+                    notifications: { phoneNumber: '5551235678' }
                 });
             const job2 = await request(app)
                 .post(`/users/${user.id}/jobs`)
                 .send({
-                    minute: '32'
+                    minute: '32',
+                    notifications: { phoneNumber: '5551235678' }
                 });
             createdJobs = Array.of(job1.body, job2.body);
         });

@@ -48,7 +48,8 @@ describe('Users', () => {
             const res = await request(app)
                 .post('/users');
             const job = await request(app)
-                .post(`/users/${res.body.id}/jobs`);
+                .post(`/users/${res.body.id}/jobs`)
+                .send({ notifications: { phoneNumber: '5551235678' } });
             const user = await request(app)
                 .get(`/users/${res.body.id}`)
                 .expect(200);

@@ -38,11 +38,14 @@ const buildNrelQuery = (req) => {
 
 const buildNotificationSettings = (req) => {
     if (!req.body.notifications) return { useStateCodes: false };
-    return { useStateCodes: req.body.notifications.useStateCodes ? req.body.notifications.useStateCodes : false };
+    return {
+        useStateCodes: req.body.notifications.useStateCodes ? req.body.notifications.useStateCodes : false
+    };
 };
 
 router.post('/', (req, res) => {
     if (req.body.user === null) return res.status(400).send({ error: 'No user found' });
+    if (!req.body.notifications || !req.body.notifications.phoneNumber) return res.status(400).send({ error: 'Missing phone number' })
     const job = {
         id: uuidv4(),
         userId: req.params.userId,
