@@ -21,13 +21,18 @@ const buildNrelQuery = (req) => {
         return {
             states: defaultStates,
             incentives: defaultIncentives,
-            users: defaultUsers
+            users: defaultUsers,
+            includeRecentResults: true
         };
     }
+    const isIncluded = (param, defaultValue) => {
+        return param !== null && param !== undefined ? param : defaultValue;
+    };
     return {
         states: req.body.query.states || defaultStates,
         incentives: req.body.query.incentives || defaultIncentives,
-        users: req.body.query.users || defaultUsers
+        users: req.body.query.users || defaultUsers,
+        includeRecentResults: isIncluded(req.body.query.includeRecentResults, true)
     }
 };
 

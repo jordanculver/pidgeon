@@ -55,6 +55,7 @@ describe('Jobs', () => {
             expect(job.body.query.states).to.contain('US');
             expect(job.body.query.incentives).to.contain('GNT');
             expect(job.body.query.users).to.contain('IND');
+            expect(job.body.query.includeRecentResults).to.equal(true);
         });
         it('returns config with desired second', async () => {
             const job = await request(app)
@@ -158,6 +159,17 @@ describe('Jobs', () => {
             expect(job.body.query.users.length).to.equal(2);
             expect(job.body.query.users).to.contain('GOV');
             expect(job.body.query.users).to.contain('STATION');
+        });
+        it('returns config with desired recent results to include in search results', async () => {
+            const job = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    query: {
+                        includeRecentResults: false
+                    }
+                })
+                .expect(201);
+            expect(job.body.query.includeRecentResults).to.equal(false);
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {
