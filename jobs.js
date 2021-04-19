@@ -13,14 +13,21 @@ const getJob = (jobId) => {
     return job;
 };
 
-const getQuery = (req) => {
-    const defaultQuery = {
-        states: ['US']
-    };
-    if (!req.body.query) return defaultQuery;
-    if (!req.body.query.states) return defaultQuery;
-    return req.body.query;
+const buildNrelQuery = (req) => {
+    const defaultStates = ['US'];
+    const defaultIncentives = ['GNT'];
+    if (!req.body.query) {
+        return {
+            states: defaultStates,
+            incentives: defaultIncentives
+        };
+    }
+    return {
+        states: req.body.query.states ? req.body.query.states : defaultStates,
+        incentives: req.body.query.incentives ? req.body.query.incentives : defaultIncentives
+    }
 };
+
 router.post('/', (req, res) => {
     if (req.body.user === null) return res.status(400).send({ error: 'No user found' });
     const job = {
@@ -33,7 +40,7 @@ router.post('/', (req, res) => {
             dayOfMonth: req.body.dayOfMonth ? req.body.dayOfMonth : '*',
             dayOfWeek: req.body.dayOfWeek ? req.body.dayOfWeek : '*'
         },
-        query: getQuery(req)
+        query: buildNrelQuery(req)
     };
     try {
         fs.writeFileSync(`data/jobs/${job.id}.json`, JSON.stringify(job));
