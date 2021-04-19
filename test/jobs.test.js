@@ -54,6 +54,7 @@ describe('Jobs', () => {
             expect(job.body.schedule.dayOfWeek).to.equal('*');
             expect(job.body.query.states).to.contain('US');
             expect(job.body.query.incentives).to.contain('GNT');
+            expect(job.body.query.users).to.contain('IND');
         });
         it('returns config with desired second', async () => {
             const job = await request(app)
@@ -144,6 +145,19 @@ describe('Jobs', () => {
             expect(job.body.query.incentives.length).to.equal(2);
             expect(job.body.query.incentives).to.contain('GNT');
             expect(job.body.query.incentives).to.contain('LOANS');
+        });
+        it('returns config with desired users to search for', async () => {
+            const job = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    query: {
+                        users: ['GOV', 'STATION']
+                    }
+                })
+                .expect(201);
+            expect(job.body.query.users.length).to.equal(2);
+            expect(job.body.query.users).to.contain('GOV');
+            expect(job.body.query.users).to.contain('STATION');
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {

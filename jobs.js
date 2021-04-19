@@ -16,15 +16,18 @@ const getJob = (jobId) => {
 const buildNrelQuery = (req) => {
     const defaultStates = ['US'];
     const defaultIncentives = ['GNT'];
+    const defaultUsers = ['IND'];
     if (!req.body.query) {
         return {
             states: defaultStates,
-            incentives: defaultIncentives
+            incentives: defaultIncentives,
+            users: defaultUsers
         };
     }
     return {
-        states: req.body.query.states ? req.body.query.states : defaultStates,
-        incentives: req.body.query.incentives ? req.body.query.incentives : defaultIncentives
+        states: req.body.query.states || defaultStates,
+        incentives: req.body.query.incentives || defaultIncentives,
+        users: req.body.query.users || defaultUsers
     }
 };
 
