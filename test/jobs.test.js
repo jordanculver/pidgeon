@@ -56,6 +56,7 @@ describe('Jobs', () => {
             expect(job.body.query.incentives).to.contain('GNT');
             expect(job.body.query.users).to.contain('IND');
             expect(job.body.query.includeRecentResults).to.equal(true);
+            expect(job.body.notifications.useStateCodes).to.equal(false);
         });
         it('returns config with desired second', async () => {
             const job = await request(app)
@@ -170,6 +171,17 @@ describe('Jobs', () => {
                 })
                 .expect(201);
             expect(job.body.query.includeRecentResults).to.equal(false);
+        });
+        it('returns config with desired notifications setting for using state codes in text messages', async () => {
+            const job = await request(app)
+                .post(`/users/${user.id}/jobs`)
+                .send({
+                    notifications: {
+                        useStateCodes: true
+                    }
+                })
+                .expect(201);
+            expect(job.body.notifications.useStateCodes).to.equal(true);
         });
     });
     describe('GET /users/:userId/jobs/:id', async () => {

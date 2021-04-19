@@ -36,6 +36,11 @@ const buildNrelQuery = (req) => {
     }
 };
 
+const buildNotificationSettings = (req) => {
+    if (!req.body.notifications) return { useStateCodes: false };
+    return { useStateCodes: req.body.notifications.useStateCodes ? req.body.notifications.useStateCodes : false };
+};
+
 router.post('/', (req, res) => {
     if (req.body.user === null) return res.status(400).send({ error: 'No user found' });
     const job = {
@@ -48,7 +53,8 @@ router.post('/', (req, res) => {
             dayOfMonth: req.body.dayOfMonth ? req.body.dayOfMonth : '*',
             dayOfWeek: req.body.dayOfWeek ? req.body.dayOfWeek : '*'
         },
-        query: buildNrelQuery(req)
+        query: buildNrelQuery(req),
+        notifications: buildNotificationSettings(req)
     };
     try {
         fs.writeFileSync(`data/jobs/${job.id}.json`, JSON.stringify(job));
