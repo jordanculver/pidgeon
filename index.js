@@ -2,7 +2,7 @@ const axios = require("axios").default;
 require('dotenv').config();
 const fs = require('fs');
 const client = require('twilio')(
-    process.env.TWILIO_ACCOUNT_S_ID,
+    process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_ACCOUNT_AUTH_TOKEN
 );
 const cron = require('node-cron');
